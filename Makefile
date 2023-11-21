@@ -17,7 +17,7 @@ GREEN       = \033[0;32m
 CYAN        = \033[0;36m
 RESET       = \033[0m
 
-all: submodule_update $(NAME)
+all: $(NAME)
 
 submodule_update:
 	@echo "$(CYAN)Updating submodule...$(RESET)"
