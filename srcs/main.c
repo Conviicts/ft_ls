@@ -1,38 +1,87 @@
-#include "ft_ls.h"
-#include "libft.h"
-#include <stdarg.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/23 06:39:37 by jode-vri          #+#    #+#             */
+/*   Updated: 2023/11/24 04:41:29 by jode-vri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void func(va_list args) {
+#include "ft_ls.h"
+
+void	init_opts(va_list args, char opt) {
     t_ls *st = va_arg(args, t_ls *);
 
-    printf("Function called with args: %s\n", st->test);
+	switch (opt) {
+		case 'l':
+			st->opts.l = true;
+			break;
+		case 'R':
+			st->opts.ur = true;
+			break;
+		case 'a':
+			st->opts.a = true;
+			break;
+		case 'r':
+			st->opts.r = true;
+			break;
+		case 't':
+			st->opts.t = true;
+			break;
+	}
 }
 
-int main(int ac, char **av) {
-	(void)ac;
-	(void)av;
+bool	ft_ls2(t_opts *opts, t_list *ptr) {
+	t_stat		st;
 
-	t_ls		ls = { .test = "kjgkj" };
+	while (ptr) {
+		if (lstat(ptr->content, &st) == -1) {
+			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			return (true);
+		}
+		if (S_ISDIR(st.st_mode)) {
+			open_dir(opts, ptr->content);
+		}
+		ptr = ptr->next;
+	}
+	return (false);
+}
 
+bool	ft_ls(t_ls *ls, char **av, int ac) {
+	(void)ls;
+	t_list	*ptr;
+	int		i;
+
+	ptr = NULL;
+	i = 0;
+	while (++i < ac) {
+		if (av[i][0] != '-')
+			ft_lstadd_back(&ptr, ft_lstnew(av[i]));
+	}
+	if (!ptr)
+		ptr = ft_lstnew(".");
+	return (ft_ls2(&ls->opts, sortlist(ptr, &ls->opts)));
+}
+
+int		main(int ac, char **av) {
+	t_ls		ls;
 	t_args		mappings[] = {
-        { "-l", func },
-        { "-R", func },
-        { "-a", func },
-        { "-r", func },
-        { "-t", func }
+        { 'l', init_opts },
+        { 'R', init_opts },
+        { 'a', init_opts },
+        { 'r', init_opts },
+        { 't', init_opts }
     };
-
     t_argsArray args = {
         .mappings = mappings,
         .len = sizeof(mappings) / sizeof(mappings[0])
     };
-
+	ft_bzero(&ls, sizeof(ls));
 	for (int i = 1; i < ac; i++) {
-        char *option = av[i];
-        if (ft_parseargs(args, option, &ls)) {
-            // Option found and processed
-        } else {
-            // Option not found
-        }
+        ft_parseargs(args, av[i], &ls);
     }
+	return (ft_ls(&ls, av, ac));
 }
