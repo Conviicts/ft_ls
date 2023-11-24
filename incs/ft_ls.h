@@ -44,7 +44,7 @@ void	print_dirname(t_opts *opts, char *directory);
 
 bool	open_dir(t_opts *opts, char *directory);
 
-t_list	*sortlist(t_list *ptr, t_opts *opts);
+t_list	*sortlist(t_list **ptr, t_opts *opts);
 
 bool	display(t_opts *opts, t_list *ptr, t_display *dsp);
 
@@ -54,5 +54,9 @@ int		get_grp_max(t_list *ptr);
 int		get_user_max(t_list *ptr);
 int		get_st_nlink_max(t_list *ptr);
 int		get_st_size_max(t_list *ptr);
+
+
+void printList(t_list *node);
+void bubbleSort(t_list *start);
 
 #endif

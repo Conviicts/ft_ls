@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:39:37 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 05:59:40 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 09:00:23 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,11 @@ bool	ft_ls2(t_opts *opts, t_list *ptr) {
 
 	while (ptr) {
 		if (lstat(ptr->content, &st) == -1) {
-			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			ft_putstr_fd("ft_ls: ", 2);
+			ft_putstr_fd((char *)ptr->content, 2);
+			ft_putstr_fd(": ", 2);
+			ft_putstr_fd(strerror(errno), 2);
+			ft_putchar_fd('\n', 2);
 			return (true);
 		}
 		if (S_ISDIR(st.st_mode)) {
@@ -62,7 +66,7 @@ bool	ft_ls(t_ls *ls, char **av, int ac) {
 	}
 	if (!ptr)
 		ptr = ft_lstnew(".");
-	return (ft_ls2(&ls->opts, sortlist(ptr, &ls->opts)));
+	return (ft_ls2(&ls->opts, sortlist(&ptr, &ls->opts)));
 }
 
 int		main(int ac, char **av) {
