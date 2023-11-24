@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:57:17 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 05:29:54 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 06:45:26 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*gettime(time_t sec) {
 	return (result);
 }
 
-void print_rights(int mode) {
+void	print_rights(int mode) {
 	char c;
 
 	c = '-';
@@ -42,36 +42,84 @@ void print_rights(int mode) {
 	c = (S_ISLNK(mode)) ? 'l' : c;
 	c = (S_ISFIFO(mode)) ? 'p' : c;
 	c = (S_ISCHR(mode)) ? 'c' : c;
-	printf("%c", c);
-	printf("%c", (mode & S_IRUSR) ? 'r' : '-');
-	printf("%c", (mode & S_IWUSR) ? 'w' : '-');
-	printf("%c", (mode & S_IXUSR) ? 'x' : '-');
-	printf("%c", (mode & S_IRGRP) ? 'r' : '-');
-	printf("%c", (mode & S_IWGRP) ? 'w' : '-');
-	printf("%c", (mode & S_IXGRP) ? 'x' : '-');
-	printf("%c", (mode & S_IROTH) ? 'r' : '-');
-	printf("%c", (mode & S_IWOTH) ? 'w' : '-');
-	printf("%c", (mode & S_IXOTH) ? 'x' : '-');
+	ft_putchar_fd(c, 1);
+	ft_putchar_fd((mode & S_IRUSR) ? 'r' : '-', 1);
+	ft_putchar_fd((mode & S_IWUSR) ? 'w' : '-', 1);
+	ft_putchar_fd((mode & S_IXUSR) ? 'x' : '-', 1);
+	ft_putchar_fd((mode & S_IRGRP) ? 'r' : '-', 1);
+	ft_putchar_fd((mode & S_IWGRP) ? 'w' : '-', 1);
+	ft_putchar_fd((mode & S_IXGRP) ? 'x' : '-', 1);
+	ft_putchar_fd((mode & S_IROTH) ? 'r' : '-', 1);
+	ft_putchar_fd((mode & S_IWOTH) ? 'w' : '-', 1);
+	ft_putchar_fd((mode & S_IXOTH) ? 'x' : '-', 1);
+	ft_putchar_fd(' ', 1);
 } 
 
-void	print_l(char *content) {
-	(void)content;
+void	print_stnlink(int len, int st_nlink) {
+	int	i;
+
+	len <= 9 ? i = 1 : 0;
+	len >= 10 && len <= 99 ? i = 2 : 0;
+	len >= 100 && len <= 999 ? i = 3 : 0;
+	while (st_nlink > i) {
+		ft_putchar_fd(' ', 1);
+		st_nlink--;
+	}
+    ft_putnbr_fd(len, 1);
+    ft_putchar_fd(' ', 1);
+}
+
+void	print_stsize(int len, int st_size) {
+	int	i;
+
+	len <= 9 ? i = 1 : 0;
+	len >= 10 && len <= 99 ? i = 2 : 0;
+	len >= 100 && len <= 999 ? i = 3 : 0;
+	len >= 1000 && len <= 9999 ? i = 4 : 0;
+	len >= 10000 && len <= 99999 ? i = 5 : 0;
+	len >= 100000 && len <= 999999 ? i = 6 : 0;
+	len >= 1000000 && len <= 9999999 ? i = 7 : 0;
+	len >= 10000000 && len <= 99999999 ? i = 8 : 0;
+	len >= 100000000 && len <= 999999999 ? i = 9 : 0;
+	ft_putchar_fd(' ', 1);
+	while (st_size > i) {
+		ft_putchar_fd(' ', 1);
+		st_size--;
+	}
+    ft_putnbr_fd(len, 1);
+}
+
+void	print_data(t_stat st, bool size, int st_nlink, int st_size) {
+    t_passwd	*passwd;
+    t_group		*group;
+    char		*date;
+	
+    passwd = getpwuid(st.st_uid);
+    group = getgrgid(st.st_gid);
+    date = gettime(st.st_mtime);
+
+	print_stnlink(st.st_nlink, st_nlink);
+    ft_putstr_fd(passwd->pw_name, 1);
+    ft_putchar_fd(' ', 1);
+    ft_putstr_fd(group->gr_name, 1);
+    if (size)
+		print_stsize(st.st_size, st_size);
+    ft_putchar_fd(' ', 1);
+    ft_putstr_fd(date, 1);
+    ft_putchar_fd(' ', 1);
+
+}
+
+void	print_l(char *content, int st_nlink, int st_size) {
 	t_stat		st;
-	t_passwd	*passwd;
-	t_group		*group;
-	char		*date;
 
 	if (lstat(content, &st) == -1)
 		return ;
-	passwd = getpwuid(st.st_uid);
-	group = getgrgid(st.st_gid);
-	date = gettime(st.st_mtime);
 	print_rights(st.st_mode);
-	if (S_ISCHR(st.st_mode) || S_ISBLK(st.st_mode)) {
-		printf("aaa %3lu %s %8s %s ", st.st_nlink, passwd->pw_name, group->gr_name, date);
-	} else {
-		printf(" %3lu %s %s %7ld %s ", st.st_nlink, passwd->pw_name, group->gr_name, st.st_size, date);
-	}
+	if (S_ISCHR(st.st_mode) || S_ISBLK(st.st_mode))
+		print_data(st, false, st_nlink, st_size);
+	else
+		print_data(st, true, st_nlink, st_size);
 }
 
 void	print_name(t_opts *opts, char *name) {
@@ -84,16 +132,16 @@ void	print_name(t_opts *opts, char *name) {
 	res = !res ? name : res + 1;
 	if (lstat(name, &st) == -1)
 		return ;
-	printf("%s", (char *)res);
+	ft_putstr_fd((char *)res, 1);
 	if (opts->l && S_ISLNK(st.st_mode)) {
 		if ((len = readlink(name, tmp, 4096)) == -1) {
 			printf("ft_ls: %s: %s\n", name, strerror(errno));
 			return ;
 		}
 		tmp[len] = '\0';
-		printf(" -> %s", tmp);
+		ft_putstr_fd(" -> ", 1);
+		ft_putstr_fd(tmp, 1);
 	}
-	// printf("\n");
 }
 
 void	print_column(char *content) {
@@ -104,24 +152,22 @@ void	print_column(char *content) {
 	res = !res ? content : res + 1;
 	if (lstat(content, &st) == -1)
 		return ;
-	printf("%s  ", (char *)res);
+	ft_putstr_fd((char *)res, 1);
+	ft_putchar_fd(' ', 1);
 }
 
-bool	display(t_opts *opts, t_list *ptr) {
-	(void)opts;
-
+bool	display(t_opts *opts, t_list *ptr, int st_nlink, int st_size) {
 	while (ptr) {
 		if (opts->l) {
-			print_l((char *)ptr->content);
+			print_l((char *)ptr->content, st_nlink, st_size);
 			print_name(opts, (char *)ptr->content);
 		} else {
 			print_column((char *)ptr->content);
 		}
 		ptr = ptr->next;
 		if (ptr && opts->l)
-			printf("\n");
+			ft_putchar_fd('\n', 1);
 	}
-	// if (!opts->l)
-		printf("\n");
+	ft_putchar_fd('\n', 1);
 	return (true);
 }

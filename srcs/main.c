@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:39:37 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 04:41:29 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 05:59:40 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ bool	ft_ls2(t_opts *opts, t_list *ptr) {
 }
 
 bool	ft_ls(t_ls *ls, char **av, int ac) {
-	(void)ls;
 	t_list	*ptr;
 	int		i;
 

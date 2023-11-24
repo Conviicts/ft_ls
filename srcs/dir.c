@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:40:26 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 04:42:25 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 06:26:19 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ bool	open_dir(t_opts *opts, char *directory) {
 	struct dirent	*file;
 	t_list			*ptr;
 	char			*name;
+	int				st_nlink;
+	int				st_size;
 
 	ptr = NULL;
 	print_dirname(opts, directory);
@@ -34,8 +36,10 @@ bool	open_dir(t_opts *opts, char *directory) {
 		printf("ft_ls: %s: %s\n", directory, strerror(errno));
 		return (true);
 	}
+	st_nlink = get_st_nlink_max(ptr);
+	st_size = get_st_size_max(ptr);
 	print_total(ptr, opts);
-	display(opts, sortlist(ptr, opts));
+	display(opts, sortlist(ptr, opts), st_nlink, st_size);
 	if (opts->ur)
 		ft_ls2(opts, sortlist(ptr, opts));
 	//TODO: free list

@@ -38,8 +38,11 @@ bool	open_dir(t_opts *opts, char *directory);
 
 t_list	*sortlist(t_list *ptr, t_opts *opts);
 
-bool	display(t_opts *opts, t_list *ptr);
+bool	display(t_opts *opts, t_list *ptr, int max_size, int st_size);
 
 bool	ft_ls2(t_opts *opts, t_list *ptr);
+
+int		get_st_nlink_max(t_list *ptr);
+int		get_st_size_max(t_list *ptr);
 
 #endif
