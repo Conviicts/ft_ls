@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:57:17 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 06:45:26 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 07:00:27 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,25 @@ void	print_stsize(int len, int st_size) {
     ft_putnbr_fd(len, 1);
 }
 
-void	print_data(t_stat st, bool size, int st_nlink, int st_size) {
+void	print_usr_grp(t_display *dsp, char *passwd, char *group) {
+	int	len;
+
+	len = ft_strlen(passwd);
+	ft_putstr_fd(passwd, 1);
+	while (len < dsp->user_len) {
+		ft_putchar_fd(' ', 1);
+		len++;
+	}
+	ft_putchar_fd(' ', 1);
+	len = ft_strlen(group);
+    ft_putstr_fd(group, 1);
+	while (len < dsp->grp_len) {
+		ft_putchar_fd(' ', 1);
+		len++;
+	}
+}
+
+void	print_data(t_stat st, bool size, t_display *dsp) {
     t_passwd	*passwd;
     t_group		*group;
     char		*date;
@@ -98,28 +116,26 @@ void	print_data(t_stat st, bool size, int st_nlink, int st_size) {
     group = getgrgid(st.st_gid);
     date = gettime(st.st_mtime);
 
-	print_stnlink(st.st_nlink, st_nlink);
-    ft_putstr_fd(passwd->pw_name, 1);
-    ft_putchar_fd(' ', 1);
-    ft_putstr_fd(group->gr_name, 1);
+	print_stnlink(st.st_nlink, dsp->st_nlink);
+	print_usr_grp(dsp, passwd->pw_name, group->gr_name);
     if (size)
-		print_stsize(st.st_size, st_size);
+		print_stsize(st.st_size, dsp->st_size);
     ft_putchar_fd(' ', 1);
     ft_putstr_fd(date, 1);
     ft_putchar_fd(' ', 1);
 
 }
 
-void	print_l(char *content, int st_nlink, int st_size) {
+void	print_l(char *content, t_display *dsp) {
 	t_stat		st;
 
 	if (lstat(content, &st) == -1)
 		return ;
 	print_rights(st.st_mode);
 	if (S_ISCHR(st.st_mode) || S_ISBLK(st.st_mode))
-		print_data(st, false, st_nlink, st_size);
+		print_data(st, false, dsp);
 	else
-		print_data(st, true, st_nlink, st_size);
+		print_data(st, true, dsp);
 }
 
 void	print_name(t_opts *opts, char *name) {
@@ -156,10 +172,10 @@ void	print_column(char *content) {
 	ft_putchar_fd(' ', 1);
 }
 
-bool	display(t_opts *opts, t_list *ptr, int st_nlink, int st_size) {
+bool	display(t_opts *opts, t_list *ptr, t_display *dsp) {
 	while (ptr) {
 		if (opts->l) {
-			print_l((char *)ptr->content, st_nlink, st_size);
+			print_l((char *)ptr->content, dsp);
 			print_name(opts, (char *)ptr->content);
 		} else {
 			print_column((char *)ptr->content);

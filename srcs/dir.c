@@ -6,19 +6,18 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:40:26 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 06:26:19 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 06:56:22 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 bool	open_dir(t_opts *opts, char *directory) {
+	t_list			*ptr;
+	t_display		dsp;
 	DIR				*dir;
 	struct dirent	*file;
-	t_list			*ptr;
 	char			*name;
-	int				st_nlink;
-	int				st_size;
 
 	ptr = NULL;
 	print_dirname(opts, directory);
@@ -36,10 +35,12 @@ bool	open_dir(t_opts *opts, char *directory) {
 		printf("ft_ls: %s: %s\n", directory, strerror(errno));
 		return (true);
 	}
-	st_nlink = get_st_nlink_max(ptr);
-	st_size = get_st_size_max(ptr);
+	dsp.grp_len = get_grp_max(ptr);
+	dsp.user_len = get_user_max(ptr);
+	dsp.st_nlink = get_st_nlink_max(ptr);
+	dsp.st_size = get_st_size_max(ptr);
 	print_total(ptr, opts);
-	display(opts, sortlist(ptr, opts), st_nlink, st_size);
+	display(opts, sortlist(ptr, opts), &dsp);
 	if (opts->ur)
 		ft_ls2(opts, sortlist(ptr, opts));
 	//TODO: free list

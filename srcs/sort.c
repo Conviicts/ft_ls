@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:42:33 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 05:04:57 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 07:04:33 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,25 +33,6 @@ static t_list	*asciisort(t_list *ptr) {
 	return (ptr);
 }
 
-static t_list	*reversesort(t_list *ptr) {
-	t_list	*current;
-	t_list	*tmp;
-	char	*tmpstr;
-
-	current = ptr;
-	while (current) {
-		tmp = current->next;
-		while (tmp) {
-			tmpstr = current->content;
-			current->content = tmp->content;
-			tmp->content = tmpstr;
-			tmp = tmp->next;
-		}
-		current = current->next;
-	}
-	return (ptr);
-}
-
 t_list	*sortlist(t_list *ptr, t_opts *opts) {
 	// t_stat	st;
 
@@ -61,7 +42,7 @@ t_list	*sortlist(t_list *ptr, t_opts *opts) {
 		ptr = asciisort(ptr);
 	}
 	if (opts->r) {
-		ptr = reversesort(ptr);
+		// ptr = reversesort(ptr);
 	}
 	return (ptr);
 }

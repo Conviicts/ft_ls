@@ -27,8 +27,16 @@ typedef struct s_opts {
 	bool	t;
 }				t_opts;
 
+typedef struct s_display {
+	int		st_nlink;
+	int		st_size;
+	int		user_len;
+	int		grp_len;
+}	t_display;
+
+
 typedef struct	s_ls {
-	t_opts	opts;
+	t_opts		opts;
 }				t_ls;
 
 bool	print_total(t_list *ptr, t_opts *opts);
@@ -38,10 +46,12 @@ bool	open_dir(t_opts *opts, char *directory);
 
 t_list	*sortlist(t_list *ptr, t_opts *opts);
 
-bool	display(t_opts *opts, t_list *ptr, int max_size, int st_size);
+bool	display(t_opts *opts, t_list *ptr, t_display *dsp);
 
 bool	ft_ls2(t_opts *opts, t_list *ptr);
 
+int		get_grp_max(t_list *ptr);
+int		get_user_max(t_list *ptr);
 int		get_st_nlink_max(t_list *ptr);
 int		get_st_size_max(t_list *ptr);
 

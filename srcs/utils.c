@@ -6,11 +6,41 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 06:04:47 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 06:24:58 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/24 06:55:37 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+int get_grp_max(t_list *ptr) {
+	t_stat	st;
+	int		max;
+
+	max = 0;
+	while (ptr) {
+		if (lstat(ptr->content, &st) < 0)
+			break ;
+		if ((int)ft_strlen(getgrgid(st.st_gid)->gr_name) > max)
+			max = ft_strlen(getgrgid(st.st_gid)->gr_name);
+		ptr = ptr->next;
+	}
+	return (max);
+}
+
+int get_user_max(t_list *ptr) {
+	t_stat	st;
+	int		max;
+
+	max = 0;
+	while (ptr) {
+		if (lstat(ptr->content, &st) < 0)
+			break ;
+		if ((int)ft_strlen(getpwuid(st.st_uid)->pw_name) > max)
+			max = ft_strlen(getpwuid(st.st_uid)->pw_name);
+		ptr = ptr->next;
+	}
+	return (max);
+}
 
 int	get_st_nlink_max(t_list *ptr) {
 	t_stat	st;
