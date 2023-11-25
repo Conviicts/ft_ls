@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:57:17 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 09:04:02 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/25 02:50:21 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,6 @@ void	print_data(t_stat st, bool size, t_display *dsp) {
 void	print_l(char *content, t_display *dsp) {
 	t_stat		st;
 
-	printf("%d\n", lstat(content, &st));
 	if (lstat(content, &st) == -1) {
 		printf("ft_ls: %s: %s\n", content, strerror(errno));
 		return ;
