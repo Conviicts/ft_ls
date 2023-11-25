@@ -55,6 +55,11 @@ int		get_user_max(t_list *ptr);
 int		get_st_nlink_max(t_list *ptr);
 int		get_st_size_max(t_list *ptr);
 
+char	*gettime(time_t sec);
+void	print_rights(int mode);
+void	print_stsize(int len, int st_size);
+void	print_stnlink(int len, int st_nlink);
+void	print_usr_grp(t_display *dsp, char *passwd, char *group);
 
 void	printList(t_list *node);
 void	bubbleSort(t_list *start);
