@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:39:37 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 09:00:23 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/25 03:29:57 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,10 @@ bool	ft_ls2(t_opts *opts, t_list *ptr) {
 	t_stat		st;
 
 	while (ptr) {
-		if (lstat(ptr->content, &st) == -1) {
-			ft_putstr_fd("ft_ls: ", 2);
-			ft_putstr_fd((char *)ptr->content, 2);
-			ft_putstr_fd(": ", 2);
-			ft_putstr_fd(strerror(errno), 2);
-			ft_putchar_fd('\n', 2);
-			return (true);
-		}
-		if (S_ISDIR(st.st_mode)) {
+		if (lstat(ptr->content, &st) == -1)
+			return (error((char *)ptr->content));
+		if (S_ISDIR(st.st_mode))
 			open_dir(opts, ptr->content);
-		}
 		ptr = ptr->next;
 	}
 	return (false);

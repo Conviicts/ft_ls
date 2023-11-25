@@ -56,7 +56,9 @@ int		get_st_nlink_max(t_list *ptr);
 int		get_st_size_max(t_list *ptr);
 
 
-void printList(t_list *node);
-void bubbleSort(t_list *start);
+void	printList(t_list *node);
+void	bubbleSort(t_list *start);
+
+bool	error(char *str);
 
 #endif

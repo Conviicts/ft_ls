@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:39:35 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 09:02:51 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/25 03:29:32 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool	print_total(t_list *ptr, t_opts *opts) {
 	len = 0;
 	while (ptr) {
 		if (lstat(ptr->content, &stat) < 0) {
-			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			error((char *)ptr->content);
 			break ;
 		}
 		len += stat.st_blocks / 2;
