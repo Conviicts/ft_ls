@@ -11,7 +11,7 @@ LIBS        = -L ./libft/ -lft -lm
 INCLUDES    = -I $(INCS) -I $(LIBFT_INC)
 
 SRC         = $(wildcard $(SRCS)*.c)
-OBJS        = $(SRC:.c=.o)
+OBJS        = $(addprefix objs/,$(notdir $(SRC:.c=.o)))
 
 GREEN       = \033[0;32m
 CYAN        = \033[0;36m
@@ -30,16 +30,22 @@ $(NAME): $(OBJS)
 	@$(CC) $(OBJS) -o $(NAME) $(LIBS)
 	@echo "$(GREEN)$(NAME) built successfully!$(RESET)"
 
+objs/%.o: $(SRCS)%.c
+	@mkdir -p objs
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
 	@make -C ./libft clean
-	@rm -f $(OBJS)
+	@rm -rf objs
 	@echo "$(GREEN)Object files removed!$(RESET)"
+
 .PHONY: clean
 
 fclean: clean
 	@make -C ./libft fclean
 	@rm -f $(NAME)
 	@echo "$(GREEN)$(NAME) removed!$(RESET)"
+
 .PHONY: fclean
 
 re: fclean all
