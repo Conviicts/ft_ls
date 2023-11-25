@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 06:57:17 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/25 03:28:53 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/25 03:32:50 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,10 @@ void	print_data(t_stat st, bool size, t_display *dsp) {
 void	print_l(char *content, t_display *dsp) {
 	t_stat		st;
 
-	if (lstat(content, &st) == -1)
-		return (error(content));
+	if (lstat(content, &st) == -1){
+		error(content);
+		return ;
+	}
 	print_rights(st.st_mode);
 	if (S_ISCHR(st.st_mode) || S_ISBLK(st.st_mode))
 		print_data(st, false, dsp);
@@ -146,12 +148,16 @@ void	print_name(t_opts *opts, char *name) {
 	
 	res = ft_strrchr(name + 1, '/');
 	res = !res ? name : res + 1;
-	if (lstat(name, &st) == -1)
-		return (error(name));
+	if (lstat(name, &st) == -1){
+		error(name);
+		return ;
+	}
 	ft_putstr_fd((char *)res, 1);
 	if (opts->l && S_ISLNK(st.st_mode)) {
-		if ((len = readlink(name, tmp, 4096)) == -1)
-			return (error(name));
+		if ((len = readlink(name, tmp, 4096)) == -1){
+			error(name);
+			return ;
+		}
 		tmp[len] = '\0';
 		ft_putstr_fd(" -> ", 1);
 		ft_putstr_fd(tmp, 1);
@@ -164,8 +170,10 @@ void	print_column(char *content) {
 
 	res = ft_strrchr(content + 1, '/');
 	res = !res ? content : res + 1;
-	if (lstat(content, &st) == -1)
-		return (error(content));
+	if (lstat(content, &st) == -1) {
+		error(content);
+		return ;
+	}
 	ft_putstr_fd((char *)res, 1);
 	ft_putchar_fd(' ', 1);
 }
