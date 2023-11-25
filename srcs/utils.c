@@ -6,7 +6,7 @@
 /*   By: jode-vri <jode-vri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 06:04:47 by jode-vri          #+#    #+#             */
-/*   Updated: 2023/11/24 09:03:13 by jode-vri         ###   ########.fr       */
+/*   Updated: 2023/11/25 03:31:13 by jode-vri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int get_grp_max(t_list *ptr) {
 	max = 0;
 	while (ptr) {
 		if (lstat(ptr->content, &st) < 0) {
-			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			error((char *)ptr->content);
 			break ;
 		}
 		if ((int)ft_strlen(getgrgid(st.st_gid)->gr_name) > max)
@@ -36,7 +36,7 @@ int get_user_max(t_list *ptr) {
 	max = 0;
 	while (ptr) {
 		if (lstat(ptr->content, &st) < 0) {
-			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			error((char *)ptr->content);
 			break ;
 		}
 		if ((int)ft_strlen(getpwuid(st.st_uid)->pw_name) > max)
@@ -53,7 +53,7 @@ int	get_st_nlink_max(t_list *ptr) {
 	max = 0;
 	while (ptr) {
 		if (lstat(ptr->content, &st) < 0) {
-			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			error((char *)ptr->content);
 			break ;
 		}
 		if (st.st_nlink <= 9 && max <= 1)
@@ -74,7 +74,7 @@ int	get_st_size_max(t_list *ptr) {
 	max = 0;
 	while (ptr) {
 		if (lstat(ptr->content, &st) < 0) {
-			printf("ft_ls: %s: %s\n", (char *)ptr->content, strerror(errno));
+			error((char *)ptr->content);
 			break ;
 		}
 		if (st.st_size <= 9 && max <= 1)
